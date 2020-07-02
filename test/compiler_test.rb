@@ -24,15 +24,16 @@ class CompilerTest < Minitest::Test
   end
 
   def test_default_watched_paths
-    assert_equal Webpacker.compiler.send(:default_watched_paths), [
-      "app/assets/**/*{.mjs,.js,.sass,.scss,.css,.module.sass,.module.scss,.module.css,.png,.svg,.gif,.jpeg,.jpg,.elm}",
-      "/etc/yarn/**/*{.mjs,.js,.sass,.scss,.css,.module.sass,.module.scss,.module.css,.png,.svg,.gif,.jpeg,.jpg,.elm}",
-      "app/elm/**/*{.mjs,.js,.sass,.scss,.css,.module.sass,.module.scss,.module.css,.png,.svg,.gif,.jpeg,.jpg,.elm}",
-      "app/javascript/**/*{.mjs,.js,.sass,.scss,.css,.module.sass,.module.scss,.module.css,.png,.svg,.gif,.jpeg,.jpg,.elm}",
-      "yarn.lock",
-      "package.json",
-      "config/webpack/**/*"
-    ]
+    default_watched_paths = Webpacker.compiler.send(:default_watched_paths)
+
+    assert_includes default_watched_paths, "app/assets/**/*{.mjs,.js,.sass,.scss,.css,.module.sass,.module.scss,.module.css,.png,.svg,.gif,.jpeg,.jpg,.elm}"
+    assert_includes default_watched_paths, "/etc/yarn/**/*{.mjs,.js,.sass,.scss,.css,.module.sass,.module.scss,.module.css,.png,.svg,.gif,.jpeg,.jpg,.elm}"
+    assert_includes default_watched_paths, "app/elm/**/*{.mjs,.js,.sass,.scss,.css,.module.sass,.module.scss,.module.css,.png,.svg,.gif,.jpeg,.jpg,.elm}"
+    assert_includes default_watched_paths, "app/javascript/**/*{.mjs,.js,.sass,.scss,.css,.module.sass,.module.scss,.module.css,.png,.svg,.gif,.jpeg,.jpg,.elm}"
+    assert_includes default_watched_paths, "#{Webpacker::Engine.root}/app/javascript/**/*{.mjs,.js,.sass,.scss,.css,.module.sass,.module.scss,.module.css,.png,.svg,.gif,.jpeg,.jpg,.elm}"
+    assert_includes default_watched_paths, "yarn.lock"
+    assert_includes default_watched_paths, "package.json"
+    assert_includes default_watched_paths, "config/webpack/**/*"
   end
 
   def test_freshness

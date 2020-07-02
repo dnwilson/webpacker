@@ -54,15 +54,17 @@ class ConfigurationTest < Webpacker::Test
   end
 
   def test_additional_paths
-    assert_equal @config.additional_paths, ["app/assets", "/etc/yarn", "app/elm"]
+    assert_includes @config.additional_paths, "app/assets"
+    assert_includes @config.additional_paths, "/etc/yarn"
+    assert_includes @config.additional_paths, "app/elm"
+    assert_includes @config.additional_paths, "#{Webpacker::Engine.root}/app/javascript"
   end
 
   def test_additional_paths_globbed
-    assert_equal @config.additional_paths_globbed, [
-      "app/assets/**/*{.mjs,.js,.sass,.scss,.css,.module.sass,.module.scss,.module.css,.png,.svg,.gif,.jpeg,.jpg,.elm}",
-      "/etc/yarn/**/*{.mjs,.js,.sass,.scss,.css,.module.sass,.module.scss,.module.css,.png,.svg,.gif,.jpeg,.jpg,.elm}",
-      "app/elm/**/*{.mjs,.js,.sass,.scss,.css,.module.sass,.module.scss,.module.css,.png,.svg,.gif,.jpeg,.jpg,.elm}"
-    ]
+    assert_includes @config.additional_paths_globbed, "app/assets/**/*{.mjs,.js,.sass,.scss,.css,.module.sass,.module.scss,.module.css,.png,.svg,.gif,.jpeg,.jpg,.elm}"
+    assert_includes @config.additional_paths_globbed, "/etc/yarn/**/*{.mjs,.js,.sass,.scss,.css,.module.sass,.module.scss,.module.css,.png,.svg,.gif,.jpeg,.jpg,.elm}"
+    assert_includes @config.additional_paths_globbed, "app/elm/**/*{.mjs,.js,.sass,.scss,.css,.module.sass,.module.scss,.module.css,.png,.svg,.gif,.jpeg,.jpg,.elm}"
+    assert_includes @config.additional_paths_globbed, "#{Webpacker::Engine.root}/app/javascript/**/*{.mjs,.js,.sass,.scss,.css,.module.sass,.module.scss,.module.css,.png,.svg,.gif,.jpeg,.jpg,.elm}"
   end
 
   def test_extensions

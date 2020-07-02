@@ -28,7 +28,15 @@ class Webpacker::Configuration
   end
 
   def additional_paths
-    fetch(:additional_paths) + resolved_paths
+    fetch(:additional_paths) + resolved_paths + engine_paths
+  end
+
+  def engine_paths
+    engines.map { |engine| "#{engine.root}/app/javascript" }
+  end
+
+  def engines
+    defined?(::Rails) ? ObjectSpace.each_object(::Rails::Engine) : []
   end
 
   def additional_paths_globbed
