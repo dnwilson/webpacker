@@ -1,17 +1,47 @@
-# Using in Rails engines
+# Rails Engine Support
+
+There are two ways to use Webpacker in a [Rails engine](https://guides.rubyonrails.org/engines.html). This guide will show you how to set up Webpacker for a compiled engine or shared engine install.
+
+## Shared
+
+If you'd like to share JS code between the application's own JavaScript
+packs and the engine, use the `gem()` function from `@rails/webpacker`
+in your environment to load in the `app/javascript/**/*` paths from an
+engine within your **config/webpack/environment.js** file:
+
+```javascript
+const { environment, gem } = require('@rails/webpacker')
+
+environment.config.resolve.modules = [
+    gem('my-engine')
+]
+
+
+module.exports = environment
+```
+
+You can now import code from **app/javascript/my-engine** like so:
+
+```javascript
+import MyEngine from "my-engine"
+```
+
+All files within Rails engine **app/javascript** paths are automatically
+watched by Webpacker, so that changes to them will cause a recompile.
+
+## Compiled (Isolated Building)
 
 If the application UI consists of multiple frontend application, you'd probably like to isolate their building too (e.g. if you use different frameworks/versions). Hence we needed our webpack(-er) to be isolated too: separate `package.json`, dev server, compilation process.
 
 You can do this by adding another Webpacker instance to your application.
 
-This guide describes how to do that using [Rails engines](https://guides.rubyonrails.org/engines.html).
+This guide describes how to do that using .
 
-
-## Step 1: create Rails engine.
+### Step 1: create Rails engine.
 
 First, you create a Rails engine (say, `MyEngine`). See the official [Rails guide](https://guides.rubyonrails.org/engines.html).
 
-## Step 2: install Webpacker within the engine.
+### Step 2: install Webpacker within the engine.
 
 There is no built-in tasks to install Webpacker within the engine, thus you have to add all the require files manually (you can copy them from the main app):
 - Add `config/webpacker.yml` and `config/webpack/*.js` files
@@ -19,7 +49,7 @@ There is no built-in tasks to install Webpacker within the engine, thus you have
 - Add `package.json` with required deps.
 
 
-## Step 3: configure Webpacker instance.
+### Step 3: configure Webpacker instance.
 
 - File `lib/my_engine.rb`
 
@@ -38,7 +68,7 @@ module MyEngine
 end
 ```
 
-## Step 4: Configure dev server proxy.
+### Step 4: Configure dev server proxy.
 
 - File `lib/my_engine/engine.rb`
 
@@ -75,7 +105,7 @@ development:
     # ...
 ```
 
-## Step 5: configure helper.
+### Step 5: configure helper.
 
 - File `app/helpers/my_engine/application_helper.rb`
 
@@ -95,7 +125,7 @@ end
 
 Now you can use `stylesheet_pack_tag` and `javascript_pack_tag` from within your engine.
 
-## Step 6: rake tasks.
+### Step 6: rake tasks.
 
 Add Rake task to compile assets in production (`rake my_engine:webpacker:compile`)
 
@@ -163,11 +193,11 @@ unless skip_webpacker_precompile
 end
 ```
 
-## Step 7: serving compiled packs.
+### Step 7: serving compiled packs.
 
 There are two approaches on serving compiled assets.
 
-### Put engine's assets to the root app's public/ folder
+#### Put engine's assets to the root app's public/ folder
 
 You can serve engine's assets using the main app's static files server which serves files from `public/` folder.
 
@@ -184,7 +214,7 @@ default: &default
   public_output_path: my-engine-packs
 ```
 
-### Use a separate middleware
+#### Use a separate middleware
 
 To serve static assets from the engine's `public/` folder you must add a middleware and point it to your engine's webpacker output path:
 
